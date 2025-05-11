@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reconocimiento de voz</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; text-align: center; }
+    button { padding: 10px 20px; font-size: 18px; }
+    #texto { margin-top: 20px; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <h2>🎙️ Habla ahora…</h2>
+  <button onclick="startRecognition()">Iniciar reconocimiento</button>
+  <p id="texto"></p>
+
+  <script>
+    function startRecognition() {
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = 'es-ES';
+      recognition.onresult = function(event) {
+        const resultado = event.results[0][0].transcript;
+        document.getElementById('texto').innerText = resultado;
+        window.ReactNativeWebView?.postMessage(resultado);
+      };
+      recognition.start();
+      
+    }
+  </script>
+</body>
+</html>
