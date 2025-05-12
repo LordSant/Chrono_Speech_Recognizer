@@ -3,11 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <title>Reconocimiento por Voz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-      body { font-family: sans-serif; text-align: center; padding: 20px; }
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        padding: 40px;
+        background-color: #f2f2f2;
+      }
       button {
-        font-size: 18px;
-        padding: 10px 20px;
+        font-size: 20px;
+        padding: 12px 25px;
         border-radius: 10px;
         border: none;
         background-color: #805E57;
@@ -18,36 +24,35 @@
         margin-top: 30px;
         font-size: 18px;
         color: #333;
+        white-space: pre-line;
       }
     </style>
   </head>
   <body>
     <h2>Habla ahora...</h2>
     <button id="startBtn">🎤 Iniciar</button>
-    <p id="output"></p>
+    <p id="output">Esperando...</p>
 
     <script>
-      document.getElementById('startBtn').addEventListener('click', function () {
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'es-ES';
-        recognition.interimResults = false;
-        recognition.maxAlternatives = 1;
+      document.getElementById('startBtn').addEventListener('click', () => {
+        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        rec.lang = 'es-ES';
+        rec.interimResults = false;
+        rec.maxAlternatives = 1;
 
-        recognition.onresult = function (event) {
-          const text = event.results[0][0].transcript;
-          document.getElementById('output').innerText = text;
-
-          // Enviar a React Native WebView
+        rec.onresult = (e) => {
+          const texto = e.results[0][0].transcript;
+          document.getElementById('output').innerText = texto;
           if (window.ReactNativeWebView) {
-            window.ReactNativeWebView.postMessage(text);
+            window.ReactNativeWebView.postMessage(texto);
           }
         };
 
-        recognition.onerror = function (event) {
-          alert('Error: ' + event.error);
+        rec.onerror = (e) => {
+          alert('Error: ' + e.error);
         };
 
-        recognition.start();
+        rec.start();
       });
     </script>
   </body>
